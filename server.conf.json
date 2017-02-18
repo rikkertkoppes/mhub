@@ -12,6 +12,12 @@
 	"logging": "info",
 	"nodes": {
 		"default": "Exchange",
+		"readonly": {
+			"type": "Exchange",
+			"options": {
+				"readonly": true
+			}
+		},
 		"state": {
 			"type": "TopicStore",
 			"options": {
@@ -36,7 +42,8 @@
 		}
 	},
 	"bindings": [
-		{ "from": "blib", "to": "test" }
+		{ "from": "blib", "to": "test" },
+		{ "from": "default", "to": "readonly" }
 	],
 	"storage": "./storage/"
 }
