@@ -26,17 +26,24 @@ export interface Initializable {
 
 export interface Destination extends Initializable {
 	name: string;
+	options?: BaseSourceOptions;
 	send(message: Message): void;
 }
 
 export interface Source extends Initializable {
 	name: string;
+	options?: BaseSourceOptions;
 	bind(destination: Destination, pattern?: string): void;
 	unbind(destination: Destination, pattern?: string): void;
 }
 
 export function isDestination(node: BaseNode | undefined): node is Destination {
 	return node && typeof (<any>node).send === "function";
+}
+
+
+export function isWritable(node: BaseNode | undefined): node is Destination {
+	return node && typeof (<any>node).send === "function" && !(node.options && node.options.readonly);
 }
 
 export function isSource(node: BaseNode | undefined): node is Source {
@@ -46,15 +53,18 @@ export function isSource(node: BaseNode | undefined): node is Source {
 export type BaseNode = Source | Destination;
 
 export interface BaseSourceOptions {
+	readonly?: boolean;
 }
 
 export class BaseSource implements Source {
 	public name: string;
+	public options: BaseSourceOptions;
 
 	private _bindings: Binding[] = [];
 
 	constructor(name: string, options?: BaseSourceOptions) {
 		this.name = name;
+		this.options = options;
 	}
 
 	public bind(destination: Destination, pattern?: string): void {

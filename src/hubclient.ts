@@ -89,7 +89,7 @@ export class HubClient extends events.EventEmitter {
 					errorMessage = `unknown node '${msg.node}'`;
 				} else if (msg.type === "publish") {
 					const pubCmd = <protocol.PublishCommand>msg;
-					if (!pubsub.isDestination(node)) {
+					if (!pubsub.isWritable(node)) {
 						errorMessage = `node '${msg.node}' is not a Destination`;
 					} else {
 						node.send(new Message(pubCmd.topic, pubCmd.data, pubCmd.headers));
